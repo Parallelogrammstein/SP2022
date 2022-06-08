@@ -23,6 +23,32 @@ def stp_read(stp_file):
     return g
 
 
+def edge_list_to_adjacency_list(graph):
+    adjacency_list = dict()
+    for el in graph:
+        u, v, c = el
+        if u not in adjacency_list.keys():
+            adjacency_list[u] = set()
+        if v not in adjacency_list.keys():
+            adjacency_list[v] = set()
+        adjacency_list[u].add(v)
+        adjacency_list[v].add(u)
+    return adjacency_list
+
+
+def edge_list_to_incidence_list(graph):
+    incidence_list = {}
+    for el in graph:
+        u, v, c = el
+        if u not in incidence_list.keys():
+            incidence_list[u] = set()
+        if v not in incidence_list.keys():
+            incidence_list[v] = set()
+        incidence_list[u].add(el)
+        incidence_list[v].add(el)
+    return incidence_list
+
+
 def update(idx):
     ax.clear()
     nx.draw_networkx_nodes(G, pos, ax=ax)
@@ -38,7 +64,7 @@ def update(idx):
     nx.draw_networkx_labels(G, pos, font_size=10, font_family="sans-serif", ax=ax)
 
     edge_labels = nx.get_edge_attributes(G, "weight")
-    nx.draw_networkx_edge_labels(G, pos, edge_labels, ax=ax)
+    nx.draw_networkx_edge_labels(G, pos, edge_labels, ax=ax, label_pos=0.6)
 
     ax.set_title(f'Frame {idx}')
 
@@ -46,7 +72,10 @@ def update(idx):
 elist = stp_read("simple.stp")
 print(elist)
 
-G = nx.Graph()
+print(edge_list_to_adjacency_list(elist))
+print(edge_list_to_incidence_list(elist))
+
+G = nx.DiGraph()
 G.add_weighted_edges_from(elist)
 labels = nx.get_edge_attributes(G, "weight")
 pos = nx.planar_layout(G)
