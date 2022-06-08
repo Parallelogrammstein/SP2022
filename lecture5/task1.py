@@ -8,7 +8,7 @@ def stp_read(stp_file):
     g = []
     flag = False
     for line in f:
-        if line == "SECTION Graph\n":
+        if line.lower() == "section graph\n":
             flag = True
             continue
         elif line == "END":
@@ -19,7 +19,8 @@ def stp_read(stp_file):
             au, u, v, c = line.split()
             if au == "E":
                 g.append((int(v), int(u), int(c)))
-            g.append((int(u), int(v), int(c)))
+            elif au == "A":
+                g.append((int(u), int(v), int(c)))
     return g
 
 
@@ -29,10 +30,7 @@ def edge_list_to_adjacency_list(graph):
         u, v, c = el
         if u not in adjacency_list.keys():
             adjacency_list[u] = set()
-        if v not in adjacency_list.keys():
-            adjacency_list[v] = set()
         adjacency_list[u].add(v)
-        adjacency_list[v].add(u)
     return adjacency_list
 
 
@@ -42,10 +40,7 @@ def edge_list_to_incidence_list(graph):
         u, v, c = el
         if u not in incidence_list.keys():
             incidence_list[u] = set()
-        if v not in incidence_list.keys():
-            incidence_list[v] = set()
         incidence_list[u].add(el)
-        incidence_list[v].add(el)
     return incidence_list
 
 
